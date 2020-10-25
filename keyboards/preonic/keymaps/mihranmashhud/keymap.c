@@ -110,8 +110,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] = LAYOUT_preonic_grid(
   _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
   _______, KC_F11 , KC_F12 , DEBUG  , RESET  , _______, _______, RGB_HUD, RGB_HUI, RGB_TOG, _______, KC_DEL ,
-  KC_CAPS, _______, MU_MOD , AU_ON  , AU_OFF , AG_NORM, AG_SWAP, RGB_SAD, RGB_SAI, RGB_MOD, _______, _______,
-  _______, MUV_DE , _______, _______, _______, _______, _______, RGB_VAD, RGB_VAI, VLK_TOG, _______, _______,
+  KC_CAPS, _______, _______, AU_ON  , AU_OFF , AG_NORM, AG_SWAP, RGB_SAD, RGB_SAI, RGB_MOD, _______, _______,
+  _______, MUV_DE , MUV_IN , _______, _______, _______, _______, RGB_VAD, RGB_VAI, VLK_TOG, _______, _______,
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 )
 };
