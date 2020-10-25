@@ -1,0 +1,4 @@
+AUDIO_ENABLE = yes
+NKRO_ENABLE = yes
+VELOCIKEY_ENABLE = yes
+SRC += muse.c
