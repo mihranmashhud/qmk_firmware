@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+cd $(qmk config | grep user.qmk_home | head - | cut --delimiter== -f2)
+KEYBOARD=$(qmk config | grep user.keyboard | head - | cut --delimiter== -f2)
+KEYMAP=$(qmk config | grep user.keymap | head - | cut --delimiter== -f2)
+
+make $KEYBOARD:$KEYMAP
+
+
+echo 'clang' > .ccls;
+OBJ_FOLDER="obj_$(echo $KEYBOARD | sed 's/\//_/g')_$(echo $KEYMAP | sed 's/\//_/g')"
+cat .build/$OBJ_FOLDER/cflags.txt | sed 's/ -/\n-/g' | sed 's/ //' | sed 's/ *$//' >> .ccls
+echo ".ccls generated"

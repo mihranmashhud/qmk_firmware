@@ -15,6 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "velocikey.h"
 
 enum preonic_layers {
   _QWERTY,
@@ -58,9 +59,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *|------|------|------|------|------|------|------|------|------|------|------|------|
  *|   ~  |  F11 |  F12 |      |      |      |      |   {  |   }  |      |      |  Del |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *| CAPS |      |      |      |      |      |      |   _  |   +  |      |      | Pipe |
+ *| CAPS |      |      |      |      |      |      |   _  |   =  |      |      | Pipe |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *|      |      |      |      |      |      |      | ISO ~|  ISO |      |      |      |
+ *|      |      |      |      |      |      |      |      |      |      |      |      |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
  *|      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |      |
  *`-----------------------------------------------------------------------------------'
@@ -68,8 +69,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT_preonic_grid(
   KC_TILD, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
   KC_TILD, KC_F11 , KC_F12 , _______, _______, _______, _______, KC_LCBR, KC_RCBR, _______, _______, KC_DEL ,
-  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, _______, _______, KC_PIPE,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_HOME, KC_END , _______,
+  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_EQL , _______, _______, KC_PIPE,
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, KC_HOME, KC_END , _______,
   _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
 )        ,
 
@@ -79,19 +80,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *|------|------|------|------|------|------|------|------|------|------|------|------|
  *|   `  |  F11 |  F12 |      |      |      |      |   [  |   ]  |      |      |  Del |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *| CAPS |      |      |      |      |      |      |   -  |   =  |      |      |   \  |
+ *| CAPS |      |      |      |      |      |      |   -  |   +  |      |      |   \  |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *|      |      |      |      |      |      |      | ISO #| ISO /|      |      |      |
+ *|      |      |      |      |      |      |      |      |      |      |      |      |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *|      |      |      |      |      |      |      |      | Next | Vol- | Vol+ | Play |
+ *|      |      |      |      |      |      |      |      | Next | Bri- | Bri+ | Play |
  *`-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_preonic_grid(
   KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
   KC_GRV , KC_F11 , KC_F12 , _______, _______, _______, _______, KC_LBRC, KC_RBRC, _______, _______, KC_DEL ,
-  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL , _______, _______, KC_BSLS,
+  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_MINS,  KC_PLUS, _______, _______, KC_BSLS,
   _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PGUP, KC_PGDN, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_BRID, KC_BRIU, KC_MPLY
 )        ,
 
 /* Adjust (Lower + Raise)
@@ -151,6 +152,80 @@ void dip_switch_update_user(uint8_t index, bool active) {
             } else {
                 layer_off(_ADJUST);
             }
+            break;
+    }
+}
+
+/* RGB LED POSITIONS
+ * ,---------------------------.
+ * |6        5       4        3|
+ * |                           |
+ * |             0             |
+ * |                           |
+ * |7        8       1        2|
+ * '---------------------------'
+ */
+
+const rgblight_segment_t PROGMEM lower_status_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8, 1, HSV_PURPLE}
+);
+
+const rgblight_segment_t PROGMEM raise_status_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {1, 1, HSV_ORANGE}
+);
+
+const rgblight_segment_t PROGMEM adjust_status_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {1, 1, HSV_CYAN},
+    {8, 1, HSV_CYAN}
+);
+
+const rgblight_segment_t PROGMEM caps_lock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {6, 2, HSV_CORAL}
+);
+
+const rgblight_segment_t PROGMEM yes_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {6, 1, HSV_GREEN}
+);
+
+const rgblight_segment_t PROGMEM no_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {6, 1, HSV_TEAL}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    lower_status_layer,
+    raise_status_layer,
+    adjust_status_layer,
+    caps_lock_layer,
+    yes_layer,
+    no_layer
+);
+
+void keyboard_post_init_user(void) {
+    rgblight_layers = my_rgb_layers;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    rgblight_set_layer_state(0, layer_state_cmp(state, _LOWER));
+    rgblight_set_layer_state(1, layer_state_cmp(state, _RAISE));
+    rgblight_set_layer_state(2, layer_state_cmp(state, _ADJUST));
+    return state;
+}
+
+bool led_update_user(led_t led_state) {
+    rgblight_set_layer_state(3, led_state.caps_lock);
+    return true;
+}
+
+void blink_status(bool blink) {
+    rgblight_blink_layer(blink ? 4 : 5, 500);
+}
+void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case DEBUG:
+            blink_status(debug_enable);
+            break;
+        case VLK_TOG:
+            blink_status(velocikey_enabled());
             break;
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 // RGB underglow configuration
+#undef RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_BREATHING
 #define RGBLIGHT_EFFECT_KNIGHT
@@ -11,11 +12,15 @@
 #define RGBLIGHT_EFFECT_TWINKLE
 
 #define RGBLIGHT_SLEEP
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_LAYER_BLINK
 
+// Audio
 #ifdef AUDIO_ENABLE
     #define STARTUP_SONG SONG(PREONIC_SOUND)
 #endif
 
 #define NO_MUSIC_MODE
 
+// N-Key rollover
 #define FORCE_NKRO
