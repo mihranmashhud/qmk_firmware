@@ -21,7 +21,8 @@ enum preonic_layers {
   _QWERTY,
   _LOWER,
   _RAISE,
-  _ADJUST
+  _MOUSE,
+  _ADJUST,
 };
 
 enum preonic_keycodes {
@@ -90,9 +91,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT_preonic_grid(
   KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
   KC_GRV , KC_F11 , KC_F12 , _______, _______, _______, _______, KC_LBRC, KC_RBRC, _______, _______, KC_DEL ,
-  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_MINS,  KC_PLUS, _______, _______, KC_BSLS,
+  KC_CAPS, _______, _______, _______, _______, _______, _______, KC_MINS, KC_PLUS, _______, _______, KC_BSLS,
   _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PGUP, KC_PGDN, _______,
   _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_BRID, KC_BRIU, KC_MPLY
+)        ,
+
+/* Mouse Navigation
+ *,-----------------------------------------------------------------------------------.
+ *|      |Accel0|Accel1|Accel2|      |      |      |      |      |      |      |      |
+ *|------|------|------|------|------|------|------|------|------|------|------|------|
+ *|      |      |  MUp |      |      |      |      | SDown|  SUp |      |      |      |
+ *|------|------|------|------|------|------|------|------|------|------|------|------|
+ *|      | MLeft| MDown|MRight|      |      |      |Mouse1|Mouse2|Mouse3|Mouse4|Mouse5|
+ *|------|------|------|------|------|------|------|------|------|------|------|------|
+ *|      |      |      |      |      |      | MExit| SLeft|SRight|      |      |      |
+ *|------|------|------|------|------|------|------|------|------|------|------|------|
+ *|      |      |      |      |      |      |      |      |      |      |      |      |
+ *`-----------------------------------------------------------------------------------'
+ */
+[_MOUSE] = LAYOUT_preonic_grid(
+  _______, KC_ACL0, KC_ACL1, KC_ACL2, _______, _______, _______, _______, _______, _______, _______, _______,
+  _______, _______, KC_MS_U, _______, _______, _______, _______, KC_WH_D, KC_WH_U, _______, _______, _______,
+  _______, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, _______, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, KC_BTN5,
+  _______, _______, _______, _______, _______, _______, _______, KC_WH_L, KC_WH_R, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 )        ,
 
 /* Adjust (Lower + Raise)
@@ -103,17 +125,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *|------|------|------|------|------|------|------|------|------|------|------|------|
  *|      |      |      |Aud on|AudOff|AGnorm|AGswap| Sat- | Sat+ |RGBMod|      |      |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
- *|      |Voice-|Voice+|      |      |      |      | Val- | Val+ |Veloci|      |      |
+ *|      |Voice-|Voice+|      |      |      |Mouse | Val- | Val+ |Veloci|      |      |
  *|------|------|------|------|------|------|------|------|------|------|------|------|
  *|      |      |      |      |      |      |      |      |      |      |      |      |
  *`-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_preonic_grid(
-  _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
-  _______, KC_F11 , KC_F12 , DEBUG  , RESET  , _______, _______, RGB_HUD, RGB_HUI, RGB_TOG, _______, KC_DEL ,
-  KC_CAPS, KC_ASTG, _______, AU_ON  , AU_OFF , AG_NORM, AG_SWAP, RGB_SAD, RGB_SAI, RGB_MOD, _______, _______,
-  _______, MUV_DE , MUV_IN , _______, _______, _______, _______, RGB_VAD, RGB_VAI, VLK_TOG, _______, _______,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+  _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6     , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_BSPC,
+  _______, KC_F11 , KC_F12 , DEBUG  , RESET  , _______, _______   , RGB_HUD, RGB_HUI, RGB_TOG, _______, KC_DEL ,
+  KC_CAPS, KC_ASTG, _______, AU_ON  , AU_OFF , AG_NORM, AG_SWAP   , RGB_SAD, RGB_SAI, RGB_MOD, _______, _______,
+  _______, MUV_DE , MUV_IN , _______, _______, _______, TG(_MOUSE), RGB_VAD, RGB_VAI, VLK_TOG, _______, _______,
+  _______, _______, _______, _______, _______, _______, _______   , _______, _______, _______, _______, _______
 )
 };
 
@@ -156,7 +178,7 @@ void dip_switch_update_user(uint8_t index, bool active) {
     }
 }
 
-/* RGB LED POSITIONS
+/* RGB LED POSITIONS (Looking from the top)
  * ,---------------------------.
  * |6        5       4        3|
  * |                           |
@@ -219,6 +241,7 @@ bool led_update_user(led_t led_state) {
 void blink_status(bool blink) {
     rgblight_blink_layer(blink ? 4 : 5, 500);
 }
+
 void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DEBUG:
@@ -229,6 +252,9 @@ void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case KC_ASTG:
             blink_status(get_autoshift_state());
+            break;
+        case TG(_MOUSE):
+            blink_status(!layer_state_is(_MOUSE));
             break;
     }
 }
