@@ -15,6 +15,21 @@
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYER_BLINK
 
+// Auto Shift
+#define AUTO_SHIFT_TIMEOUT 135
+
+#define NO_AUTO_SHIFT_SPECIAL
+#define AUTO_SHIFT_NO_SETUP
+
+// Mouse Movement
+#define MK_3_SPEED
+#define MK_C_OFFSET_0 4
+#define MK_C_OFFSET_1 8
+#define MK_C_OFFSET_2 16
+#define MK_W_INTERVAL_0 180
+#define MK_W_INTERVAL_1 60
+#define MK_W_INTERVAL_2 20
+
 // Audio
 #ifdef AUDIO_ENABLE
     #define STARTUP_SONG SONG(PREONIC_SOUND)
